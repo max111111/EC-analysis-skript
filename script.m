@@ -1,4 +1,4 @@
-function [  ] = Paramterabfrage(Name, Projekt, YYYY, Ru, Strom, Spannung, pH, C )
+function [  ] = script()
 
 %Part 1 des Programms: Ziel der Auswertung
 
