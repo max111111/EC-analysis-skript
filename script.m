@@ -67,28 +67,70 @@ Kommentar=input('Hier können Sie einen zusätzlichen Kommentar eingeben und drück
 
 Konstante=0.98; %Konstannte addieren für RHE
 
-%-----Part2: Einlesen Dateipfad ------
-[filename, pathname] = uigetfile('*.crv', 'Dateiauswahl: Origalys Datei Import','Z:\Auswertung','MultiSelect', 'on');
-if isequal(filename, 0)
- disp('Anwender hat die Funktion abgebrochen')
- else
- disp(['Anwender hat folgende Datei ausgewählt ', fullfile(pathname, filename)])
- end 
-index{1}=char(filename);
-
-%----- Einlesen der Datei -------
-Dateiname = fopen([pathname index{1}]);
-heading = textscan(Dateiname,'%s %s %s',10);
-fgetl(Dateiname); 
-data = textscan(Dateiname,'%n %n %n');
-
-%----- Daten die entsprechenden Variablen zuweisen------
-Spannung=data{1,1}; %Spannung
-Strom=data{1,2}; %Strom
-%Zeit=data{1,3}; %Zeit
-
+%-----Part2: Einlesen Dateipfad und Einlesen der Daten ------
+fprintf('Geben Sie den genutzten Potentiostaten an\n 1.Gamry\n 2.Origalys\n 3.Ivium\n')
+Potentiostat=input('')
+    switch Potentiostat
+        case 1
+            Pot=('Gamry')
+            [filename, pathname] = uigetfile('*.dta', 'Dateiauswahl: Gamry Datei Import','Z:\Auswertung','MultiSelect', 'on');
+            if isequal(filename, 0)
+            disp('Anwender hat die Funktion abgebrochen')
+            else
+            disp(['Anwender hat folgende Datei ausgewählt ', fullfile(pathname, filename)])
+            end 
+            index{1}=char(filename);
+            
+            Dateiname = fopen([pathname index{1}]);
+            heading = textscan(Dateiname,'%s %s %s %s %s %s %s %s %s',57);
+            fgetl(Dateiname); 
+            data = textscan(Dateiname,'%*f %f %f %f %f %f %f %f %f %*s %*f','Delimiter','\t');
+            
+            Spannung=data{1,3}; %Spannung
+            Strom=data{1,4}; %Strom
+            %Zeit=data{1,2}; %Zeit
+            
+        case 2
+            Pot=('Origalys') 
+            [filename, pathname] = uigetfile('*.crv', 'Dateiauswahl: Origalys Datei Import','Z:\Auswertung','MultiSelect', 'on');
+            if isequal(filename, 0)
+            disp('Anwender hat die Funktion abgebrochen')
+            else
+            disp(['Anwender hat folgende Datei ausgewählt ', fullfile(pathname, filename)])
+            end 
+            index{1}=char(filename);
+            
+            Dateiname = fopen([pathname index{1}]);
+            heading = textscan(Dateiname,'%s %s %s',10);
+            fgetl(Dateiname); 
+            data = textscan(Dateiname,'%n %n %n');
+            
+            Spannung=data{1,1}; %Spannung
+            Strom=data{1,2}; %Strom
+            %Zeit=data{1,3}; %Zeit
+            
+            case 3
+            Pot=('Ivium') 
+            [filename, pathname] = uigetfile('*.idf', 'Dateiauswahl: Ivium Datei Import','Z:\Auswertung','MultiSelect', 'on');
+            if isequal(filename, 0)
+            disp('Anwender hat die Funktion abgebrochen')
+            else
+            disp(['Anwender hat folgende Datei ausgewählt ', fullfile(pathname, filename)])
+            end 
+            index{1}=char(filename);
+            
+            Dateiname = fopen([pathname index{1}]);
+            heading = textscan(Dateiname,'%s %s %s',79);
+            fgetl(Dateiname); 
+            data = textscan(Dateiname,'%n %n %n');
+            
+            Spannung=data{1,3}; %Spannung
+            Strom=data{1,2}; %Strom
+            %Zeit=data{1,1}; %Zeit
+    end
+    
 %----- Zyklenzahl ermitteln -------
-Zyklus=max(Spannung) 
+%Zyklus=max(Spannung) 
 
 %----- Berechnung ------
 Impedanzabziehen=Spannung-Strom*Ru; %Ru abziehen
